@@ -1,0 +1,5 @@
+control
+deepspac
+guns
+space
+suicide

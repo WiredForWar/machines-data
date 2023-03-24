@@ -1,0 +1,6 @@
+2o1
+fortmdn
+fortmult
+fortsdn
+fortseig
+seige

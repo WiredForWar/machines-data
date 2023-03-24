@@ -1,0 +1,13 @@
+control
+deepspac
+fortmdn
+fortmult
+fortsdn
+fortseig
+guns
+kidnap
+m_contrl
+sat
+seige
+space
+suicide
