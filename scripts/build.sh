@@ -5,7 +5,11 @@ SCRIPTS_PATH=$(dirname $SCRIPT)
 
 ROOT_DIR="$(dirname $SCRIPTS_PATH)"
 SOURCE_DIR="$ROOT_DIR/datasrc"
-BUILD_DIR="$ROOT_DIR/build"
+if [ x"$BUILD_DIR" = "x" ]; then
+  BUILD_DIR="$ROOT_DIR/build"
+fi
+
+echo "Build dir: \"$BUILD_DIR\""
 
 echo "Check the environment..."
 if [ -x "$(command -v rsvg-convert)" ]; then
