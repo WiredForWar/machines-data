@@ -42,7 +42,7 @@ convert_svg2png()
   ${CONVERTER_COMMAND}${OUTPUT} $INPUT
 }
 
-echo "List the source data..."
+echo "Collecting the source data..."
 cd "$SOURCE_DIR"
 GUI_DIRS=$(find gui -mindepth 1 -type d)
 SVG_FILES=$(find -type f -name '*.svg')
@@ -57,7 +57,7 @@ do
   mkdir -p "$GUI_DIR"
 done
 
-echo "Copy the textures..."
+echo "Copying the textures..."
 for TEXTURES_LIST in $PLANET_TEXTURES
 do
   PLANETS=$(cat $SOURCE_DIR/$TEXTURES_LIST)
@@ -70,9 +70,9 @@ do
   done
 done
 
-echo "Scale the UI images..."
+echo "Scaling the UI images..."
 for SVG_FILE in $SVG_FILES
 do
-  BASE_PATH=$(echo "$SVG_FILE"|sed 's/^..// ; s/....$//')
+  BASE_PATH=$(echo "$SVG_FILE" | sed 's/^..// ; s/....$//')
   convert_svg2png "$SOURCE_DIR/$BASE_PATH.svg" "${BASE_PATH}_2x.png"
 done
