@@ -14,11 +14,16 @@ echo "Build dir: \"$BUILD_DIR\""
 echo "Check the environment..."
 if [ -x "$(command -v rsvg-convert)" ]; then
   CONVERTER_COMMAND="rsvg-convert -o "
+  echo "-- Found $(rsvg-convert --version)"
 elif [ -x "$(command -v inkscape)" ]; then
   CONVERTER_COMMAND="inkscape --export-filename="
+  echo "-- Found $(inkscape --version)"
 elif [ -x "$(command -v flatpak)" ]; then
-  if [ "$(flatpak list --app|grep org.inkscape.Inkscape|wc -l)" = "1" ]; then
-    CONVERTER_COMMAND="flatpak run --command=inkscape org.inkscape.Inkscape --export-filename="
+  INKSCAPE_ID="org.inkscape.Inkscape"
+  if [ "$(flatpak list --app|grep $INKSCAPE_ID|wc -l)" = "1" ]; then
+    CONVERTER_COMMAND="flatpak run --command=inkscape $INKSCAPE_ID --export-filename="
+    INKSCAPE_VERSION=$(flatpak list --app --columns application,version|grep $INKSCAPE_ID|cut -f2)
+    echo "-- Found Inkscape $INKSCAPE_VERSION (Flatpak)"
   fi
 fi
 
