@@ -22,7 +22,7 @@ elif [ -x "$(command -v flatpak)" ]; then
   fi
 fi
 
-if [ x"CONVERTER_COMMAND" = x ]; then
+if [ x"$CONVERTER_COMMAND" = x ]; then
   echo "Unable to find an svg converter."
   echo "Please install rsvg-convert or Inkscape and try again."
   # Note: 'convert' gave a worse result
