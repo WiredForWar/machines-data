@@ -26,3 +26,4 @@ INSTALL_DIR="$INSTALL_DIR" $SCRIPTS_PATH/install.sh || exit 1
 
 cd "$INSTALL_DIR"
 7z a machines-data-$DATE_STR-$MACH_DATA_COMMIT.7z machines
+#zip -r machines-data-$DATE_STR-$MACH_DATA_COMMIT.7z machines
