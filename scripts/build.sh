@@ -105,7 +105,7 @@ grayscale_icons()
     GIMP_COMMAND_PART="$GIMP_COMMAND_PART (do-grayscale-icon \"machines/grey/$ICON.png\" \"machines/grey/$ICON.png\" )"
   done
 
-  gimp -idf -b "(define (do-grayscale-icon input output) (let* ((image (car (gimp-file-load RUN-NONINTERACTIVE input input) ) ) (drawable (car (gimp-image-get-active-layer image)))) (gimp-image-convert-grayscale image) (gimp-drawable-brightness-contrast drawable $BRIGHTNESS $CONTRAST) (gimp-file-save RUN-NONINTERACTIVE image drawable output output) (gimp-image-delete image)) ) $GIMP_COMMAND_PART" -b '(gimp-quit 0)' 2> /dev/null
+  gimp -idf -b "(define (do-grayscale-icon input output) (let* ((image (car (gimp-file-load RUN-NONINTERACTIVE input input) ) ) (drawable (car (gimp-image-get-active-layer image)))) (gimp-image-convert-grayscale image) (gimp-drawable-brightness-contrast drawable $BRIGHTNESS $CONTRAST) (gimp-file-save RUN-NONINTERACTIVE image drawable output output) (gimp-image-delete image)) ) $GIMP_COMMAND_PART" -b '(gimp-quit 0)' 2> /dev/null || exit 2
   # Grayscale icons are done
 }
 
