@@ -35,12 +35,14 @@ if [ x"$CONVERTER_COMMAND" = x ]; then
   exit 1
 fi
 
-if [ -x "$(command -v gimp)" ]; then
-  GIMP_COMMAND="gimp"
-  echo "-- Found GIMP$(gimp --version|cut -d n -f 4-)"
-else
-  echo "Please install GIMP (needed e.g. to generate grayscale icons)"
-  exit 1
+if [ x"$SKIP_GRAYSCALE" = "x" ]; then
+  if [ -x "$(command -v gimp)" ]; then
+    GIMP_COMMAND="gimp"
+    echo "-- Found GIMP$(gimp --version|cut -d n -f 4-)"
+  else
+    echo "Please install GIMP (needed e.g. to generate grayscale icons)"
+    exit 1
+  fi
 fi
 
 convert_svg2png()
@@ -72,17 +74,19 @@ cd ../..
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 
-mkdir -p gui/navigate
-cd gui/navigate/
-
-mkdir -p construc/grey
-mkdir -p machines/grey
-cp -rf $DATA_DIR/gui/navigate/construc/red/*.png construc/grey/
-cp -rf $DATA_DIR/gui/navigate/machines/red/*.png machines/grey/
-
 grayscale_icons()
 {
   echo "Creating grayscale icons from colorful... (this will take a while)"
+
+  cd "$BUILD_DIR"
+  mkdir -p gui/navigate
+  cd gui/navigate/
+
+  mkdir -p construc/grey
+  mkdir -p machines/grey
+  cp -rf $DATA_DIR/gui/navigate/construc/red/*.png construc/grey/
+  cp -rf $DATA_DIR/gui/navigate/machines/red/*.png machines/grey/
+
   MACHINES_ORIGIN_BRIGHTNESS=0.155
   CONSTRUCTIONS_ORIGIN_BRIGHTNESS=0.275
 
@@ -105,7 +109,9 @@ grayscale_icons()
   # Grayscale icons are done
 }
 
-grayscale_icons
+if [ x"$SKIP_GRAYSCALE" = "x" ]; then
+  grayscale_icons
+fi
 
 cd "$BUILD_DIR"
 for GUI_DIR in $GUI_DIRS
