@@ -20,5 +20,5 @@ echo "Installing to $INSTALL_DIR"
 INSTALL_MACHINES_DIR="$INSTALL_DIR/machines"
 mkdir -p "$INSTALL_MACHINES_DIR"
 
-cp -rf $DATA_DIR/* "$INSTALL_MACHINES_DIR/"
-cp -rf $BUILD_DIR/* "$INSTALL_MACHINES_DIR/"
+cp -rf --preserve=timestamps $DATA_DIR/* "$INSTALL_MACHINES_DIR/"
+cp -rf --preserve=timestamps $BUILD_DIR/* "$INSTALL_MACHINES_DIR/"

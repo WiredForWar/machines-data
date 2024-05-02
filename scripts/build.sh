@@ -84,8 +84,8 @@ grayscale_icons()
 
   mkdir -p construc/grey
   mkdir -p machines/grey
-  cp -rf $DATA_DIR/gui/navigate/construc/red/*.png construc/grey/
-  cp -rf $DATA_DIR/gui/navigate/machines/red/*.png machines/grey/
+  cp -rf --preserve=timestamps $DATA_DIR/gui/navigate/construc/red/*.png construc/grey/
+  cp -rf --preserve=timestamps $DATA_DIR/gui/navigate/machines/red/*.png machines/grey/
 
   MACHINES_ORIGIN_BRIGHTNESS=0.155
   CONSTRUCTIONS_ORIGIN_BRIGHTNESS=0.275
@@ -128,7 +128,7 @@ do
   for PLANET in $PLANETS
   do
     mkdir -p "models/planet/$PLANET"
-    cp -rf $SOURCE_DIR/$TEXTURES_SOURCE_DIR/texture4 "models/planet/$PLANET/"
+    cp -rf --preserve=timestamps $SOURCE_DIR/$TEXTURES_SOURCE_DIR/texture4 "models/planet/$PLANET/"
   done
 done
 
