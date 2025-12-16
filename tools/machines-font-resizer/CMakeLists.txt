@@ -14,10 +14,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui REQUIRED)
 
-add_executable(machines-font-resizer
-  main.cpp
-)
-target_link_libraries(machines-font-resizer
-    Qt::Core
-    Qt::Gui
-)
+add_executable(machines-font-resizer main.cpp)
+target_link_libraries(machines-font-resizer Qt::Core Qt::Gui)
