@@ -1,0 +1,41 @@
+#pragma once
+
+#include <QMainWindow>
+
+#include <memory>
+
+QT_FORWARD_DECLARE_CLASS(QGraphicsScene)
+
+namespace Ui
+{
+class MainWindow;
+}
+
+class BitmapFont;
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit MainWindow(QWidget* parent = nullptr);
+    ~MainWindow();
+
+private:
+    void browseFile();
+
+    void openFile(const QString &filePath);
+    void reload();
+    void redrawTable();
+
+    void resizeEvent(QResizeEvent* event) override;
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
+
+private:
+    Ui::MainWindow* mUi{};
+    QGraphicsScene* mScene{};
+    std::unique_ptr<BitmapFont> mFont{};
+    QString mDialogPath;
+    float mScale{};
+};
