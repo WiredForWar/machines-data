@@ -6,6 +6,8 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QFileDialog>
+#include <QFontDialog>
+#include <QFontMetrics>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSimpleTextItem>
 #include <QImage>
@@ -40,6 +42,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     connect(mUi->actionOpen, &QAction::triggered, this, &MainWindow::browseFile);
     connect(mUi->actionReload, &QAction::triggered, this, &MainWindow::reload);
+    connect(mUi->actionSelectReferenceFont, &QAction::triggered, this, &MainWindow::selectReferenceFont);
 
     mScene = new QGraphicsScene(this);
     mUi->graphicsView->setScene(mScene);
@@ -47,6 +50,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     const QStringList docLocations = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
     mDialogPath = !docLocations.isEmpty() ? docLocations.first() : QDir::homePath();
+
+    mReferenceFont = font();
 }
 
 MainWindow::~MainWindow()
@@ -92,6 +97,7 @@ void MainWindow::redrawTable()
     if (!mFont)
         return;
 
+    QFontMetrics referenceFontMetrics(mReferenceFont);
     const BitmapFont &font = *mFont;
     int pxPerChar = 30;
     int charsPerRow = (mUi->graphicsView->viewport()->width() - 32) / mScale / pxPerChar;
@@ -103,18 +109,25 @@ void MainWindow::redrawTable()
         int charCode = i + firstChar;
         const qreal xCenter = 20 + (i % charsPerRow) * pxPerChar;
         int line = i / charsPerRow;
-        const qreal baseY = line * (48 + font.height()) + 20;
+        const qreal baseY = line * (42 + font.height() + referenceFontMetrics.height()) + 20;
 
-        QGraphicsItem* pText = mScene->addSimpleText(QChar(charCode));
-        pText->setPos(xCenter - pText->boundingRect().width() / 2, baseY);
-        QGraphicsItem* pBitmapChar = mScene->addPixmap(font.getChar(charCode));
-        pBitmapChar->setPos(xCenter - pBitmapChar->boundingRect().width() / 2, baseY + 16);
-        QGraphicsItem* pText2 = mScene->addSimpleText(QString::number(charCode));
-        const qreal xText = xCenter - pText2->boundingRect().width() / 2;
-        const qreal yText = pBitmapChar->pos().y() + font.height();
-        pText2->setPos(xText, yText);
+        QGraphicsItem* pReferenceCharacter = mScene->addSimpleText(QChar(charCode), mReferenceFont);
+        pReferenceCharacter->setPos(xCenter - pReferenceCharacter->boundingRect().width() / 2, baseY);
+        QGraphicsItem* pBitmapCharacter = mScene->addPixmap(font.getChar(charCode));
+        pBitmapCharacter->setPos(xCenter - pBitmapCharacter->boundingRect().width() / 2, baseY + referenceFontMetrics.height());
+        QGraphicsItem* pCode = mScene->addSimpleText(QString::number(charCode));
+        const qreal xText = xCenter - pCode->boundingRect().width() / 2;
+        const qreal yText = pBitmapCharacter->pos().y() + font.height();
+        pCode->setPos(xText, yText);
     }
 }
+
+void MainWindow::selectReferenceFont()
+{
+    mReferenceFont = QFontDialog::getFont(nullptr, mReferenceFont);
+    redrawTable();
+}
+
 void MainWindow::dragEnterEvent(QDragEnterEvent* event)
 {
     if (event == nullptr)

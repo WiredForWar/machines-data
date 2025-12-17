@@ -2,6 +2,8 @@
 
 #include <QMainWindow>
 
+#include <QFont>
+
 #include <memory>
 
 QT_FORWARD_DECLARE_CLASS(QGraphicsScene)
@@ -27,6 +29,7 @@ private:
     void openFile(const QString &filePath);
     void reload();
     void redrawTable();
+    void selectReferenceFont();
 
     void resizeEvent(QResizeEvent* event) override;
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -36,6 +39,7 @@ private:
     Ui::MainWindow* mUi{};
     QGraphicsScene* mScene{};
     std::unique_ptr<BitmapFont> mFont{};
+    QFont mReferenceFont;
     QString mDialogPath;
     float mScale{};
 };
