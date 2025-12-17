@@ -122,7 +122,7 @@ void MainWindow::redrawTable()
     int pxPerChar = 30;
     int charsPerRow = (mUi->graphicsView->viewport()->width() - 32) / mScale / pxPerChar;
 
-    constexpr int firstChar = '0';
+    constexpr int firstChar = '!';
     constexpr int maxChar = 256 - firstChar;
     for (int i = 0; i < maxChar; ++i)
     {
