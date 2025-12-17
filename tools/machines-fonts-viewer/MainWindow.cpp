@@ -6,6 +6,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QFileDialog>
+#include <QFontDatabase>
 #include <QFontDialog>
 #include <QFontMetrics>
 #include <QGraphicsPixmapItem>
@@ -25,6 +26,25 @@ QList<int> IgnoreChars = {
     158, // Lamp (tech) icon
     169,       170, 171, 172,
 };
+
+enum class FileType
+{
+    Font,
+    Image,
+};
+
+std::optional<FileType> getFileType(const QUrl &fileUrl)
+{
+    const QFileInfo fileInfo(fileUrl.path());
+    const QString extension = fileInfo.completeSuffix().toLower();
+    if (extension == QLatin1String("ttf"))
+        return FileType::Font;
+
+    if (extension == QLatin1String("bmp") || extension == QLatin1String("png"))
+        return FileType::Image;
+
+    return std::nullopt;
+}
 
 } // namespace
 
@@ -69,6 +89,7 @@ void MainWindow::browseFile()
     mDialogPath = fileName;
 
     openFile(fileName);
+    redrawTable();
 }
 
 void MainWindow::openFile(const QString &filePath)
@@ -78,7 +99,6 @@ void MainWindow::openFile(const QString &filePath)
     QFileInfo info(filePath);
     mFont = std::make_unique<BitmapFont>(filePath);
     setWindowTitle(info.fileName() + " - " + QGuiApplication::applicationDisplayName());
-    redrawTable();
 }
 
 void MainWindow::reload()
@@ -140,8 +160,11 @@ void MainWindow::dragEnterEvent(QDragEnterEvent* event)
         {
             if (url.isLocalFile())
             {
-                event->acceptProposedAction();
-                return;
+                std::optional<FileType> fileType = getFileType(url);
+                if (fileType.has_value())
+                {
+                    event->acceptProposedAction();
+                }
             }
         }
     }
@@ -162,13 +185,34 @@ void MainWindow::dropEvent(QDropEvent* event)
         if (!url.isLocalFile())
             continue;
 
-        const QString filePath = url.toLocalFile();
-        if (!filePath.isEmpty())
+        std::optional<FileType> fileType = getFileType(url);
+        if (fileType == FileType::Image)
         {
-            openFile(filePath);
-            event->acceptProposedAction();
-            return;
+            const QString filePath = url.toLocalFile();
+            if (!filePath.isEmpty())
+            {
+                openFile(filePath);
+                event->acceptProposedAction();
+            }
         }
+        else if (fileType == FileType::Font)
+        {
+            int fontId = QFontDatabase::addApplicationFont(url.toLocalFile());
+            if (fontId >= 0)
+            {
+                QStringList families = QFontDatabase::applicationFontFamilies(fontId);
+                if (!families.isEmpty())
+                {
+                    mReferenceFont.setFamilies(families);
+                    event->acceptProposedAction();
+                }
+            }
+        }
+    }
+
+    if (event->isAccepted())
+    {
+        redrawTable();
     }
 }
 void MainWindow::resizeEvent(QResizeEvent* event)
