@@ -23,6 +23,7 @@ public:
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
+    void setNumbersBase(int base);
 private:
     void browseFile();
 
@@ -42,4 +43,5 @@ private:
     QFont mReferenceFont;
     QString mDialogPath;
     float mScale{};
+    int mNumbersBase{};
 };

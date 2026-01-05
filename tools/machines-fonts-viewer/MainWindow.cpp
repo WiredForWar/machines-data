@@ -3,6 +3,7 @@
 
 #include "BitmapFont.hpp"
 
+#include <QActionGroup>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QFileDialog>
@@ -68,15 +69,45 @@ MainWindow::MainWindow(QWidget* parent)
     mUi->graphicsView->setScene(mScene);
     mUi->graphicsView->setTransform(QTransform::fromScale(mScale, mScale));
 
+    QActionGroup *group = new QActionGroup(this);
+    group->addAction(mUi->actionSetDecimalFormat);
+    group->addAction(mUi->actionSetHexadecimalFormat);
+
+    connect(
+        mUi->actionSetDecimalFormat,
+        &QAction::triggered,
+        this,
+        [&](bool checked)
+        {
+            if (checked)
+                setNumbersBase(10);
+        });
+    connect(
+        mUi->actionSetHexadecimalFormat,
+        &QAction::triggered,
+        this,
+        [&](bool checked)
+        {
+            if (checked)
+                setNumbersBase(16);
+        });
+
     const QStringList docLocations = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
     mDialogPath = !docLocations.isEmpty() ? docLocations.first() : QDir::homePath();
 
+    mUi->actionSetDecimalFormat->trigger();
     mReferenceFont = font();
 }
 
 MainWindow::~MainWindow()
 {
     delete mUi;
+}
+
+void MainWindow::setNumbersBase(int base)
+{
+    mNumbersBase = base;
+    reload();
 }
 
 void MainWindow::browseFile()
@@ -135,7 +166,7 @@ void MainWindow::redrawTable()
         pReferenceCharacter->setPos(xCenter - pReferenceCharacter->boundingRect().width() / 2, baseY);
         QGraphicsItem* pBitmapCharacter = mScene->addPixmap(font.getChar(charCode));
         pBitmapCharacter->setPos(xCenter - pBitmapCharacter->boundingRect().width() / 2, baseY + referenceFontMetrics.height());
-        QGraphicsItem* pCode = mScene->addSimpleText(QString::number(charCode));
+        QGraphicsItem* pCode = mScene->addSimpleText(QString::number(charCode, mNumbersBase));
         const qreal xText = xCenter - pCode->boundingRect().width() / 2;
         const qreal yText = pBitmapCharacter->pos().y() + font.height();
         pCode->setPos(xText, yText);

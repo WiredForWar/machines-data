@@ -35,7 +35,7 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionOpen"/>
     <addaction name="actionReload"/>
@@ -43,9 +43,11 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>&amp;View</string>
     </property>
     <addaction name="actionSelectReferenceFont"/>
+    <addaction name="actionSetDecimalFormat"/>
+    <addaction name="actionSetHexadecimalFormat"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -77,7 +79,23 @@
   </action>
   <action name="actionSelectReferenceFont">
    <property name="text">
-    <string>Select Reference Font...</string>
+    <string>Select Reference &amp;Font...</string>
+   </property>
+  </action>
+  <action name="actionSetDecimalFormat">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Decimal Format</string>
+   </property>
+  </action>
+  <action name="actionSetHexadecimalFormat">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Hexadecimal Format</string>
    </property>
   </action>
  </widget>
